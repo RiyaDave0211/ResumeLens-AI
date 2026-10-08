@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>ResumeLens AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#0b0b1a;--card:rgba(255,255,255,.07);--bd:rgba(255,255,255,.14);--tx:#f1f0ff;--mu:#a7a5c8;--a:#8b5cf6;--b:#06b6d4;--g:#34d399;--y:#fbbf24;--r:#fb7185}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;overflow-x:hidden}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.45;z-index:0;animation:float 14s ease-in-out infinite}
+.b1{width:420px;height:420px;background:var(--a);top:-120px;left:-100px}
+.b2{width:380px;height:380px;background:var(--b);bottom:-120px;right:-80px;animation-delay:-5s}
+.b3{width:280px;height:280px;background:#ec4899;top:40%;left:55%;animation-delay:-9s;opacity:.25}
+@keyframes float{50%{transform:translate(50px,-40px) scale(1.15)}}
+main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:clamp(28px,6vw,46px);margin:0;letter-spacing:-1px;background:linear-gradient(90deg,var(--a),var(--b),#ec4899,var(--a));background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:300%}}
+.sub{color:var(--mu);margin:8px 0 22px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:18px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:up .6s both}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+label{font-size:13px;color:var(--mu);display:block;margin:0 0 6px}
+input[type=text],textarea{width:100%;background:rgba(127,127,160,.12);border:1px solid var(--bd);border-radius:12px;color:var(--tx);padding:12px;font:inherit;outline:none;transition:.2s}
+input:focus,textarea:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(139,92,246,.25)}
+textarea{min-height:190px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:600;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--a),var(--b));transition:.2s;position:relative;overflow:hidden}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(139,92,246,.4)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.ghost{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+#load{display:none;text-align:center;padding:36px}
+.doc{position:relative;width:130px;height:168px;margin:0 auto 18px;border:1px solid var(--bd);border-radius:12px;padding:14px 12px;background:rgba(255,255,255,.05);overflow:hidden;display:flex;flex-direction:column;gap:9px;text-align:left}
+.doc .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));display:block;flex:none}
+.doc .ln{display:block;height:6px;border-radius:4px;background:rgba(127,127,160,.3);animation:pl 1.4s ease-in-out infinite}
+.doc .ln:nth-child(even){animation-delay:.3s}
+@keyframes pl{50%{opacity:.45}}
+.w1{width:100%}.w2{width:78%}.w3{width:55%}
+.beam{position:absolute;left:0;right:0;top:0;height:44px;background:linear-gradient(180deg,transparent,rgba(6,182,212,.35));border-bottom:2px solid var(--b);box-shadow:0 6px 18px rgba(6,182,212,.7);animation:sc 1.8s ease-in-out infinite alternate}
+@keyframes sc{from{transform:translateY(-44px)}to{transform:translateY(168px)}}
+.pbar{width:220px;max-width:80%;height:6px;border-radius:6px;background:rgba(127,127,160,.2);margin:14px auto 0;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));border-radius:6px}
+#res{display:none}
+.top{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:170px;height:170px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:44px;font-weight:800}
+.ring small{display:block;font-size:13px;color:var(--mu);font-weight:500}
+.grow{flex:1;min-width:220px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:700;font-size:13px;background:rgba(139,92,246,.2);color:var(--a);margin-bottom:8px}
+.cat{margin:10px 0}
+.cat div.h{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.bar{height:8px;border-radius:9px;background:rgba(127,127,160,.2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--a),var(--b));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.grid{column-count:2;column-gap:14px;margin-top:14px}
+.grid .card{display:inline-block;width:100%;break-inside:avoid;margin:0 0 14px}
+@media (max-width:640px){.grid{column-count:1}}
+.grid .card h3{margin:0 0 10px;font-size:16px}
+.it{padding:10px 12px;border-radius:12px;margin:8px 0;font-size:14px;line-height:1.45;background:rgba(127,127,160,.1);border-left:3px solid;opacity:0;transform:translateX(-14px);animation:in .5s forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.it b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.g{border-color:var(--g)}.y{border-color:var(--y)}.r{border-color:var(--r)}.c{border-color:var(--b)}
+.err{color:var(--r);margin-top:10px;display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.it{opacity:1;transform:none}}
+.drop{position:relative;border:2px dashed var(--bd);border-radius:16px;padding:22px;text-align:center;cursor:pointer;margin-bottom:14px;transition:.25s;color:var(--mu)}
+.drop:hover,.drop.on{border-color:var(--a);background:rgba(139,92,246,.12);transform:scale(1.01);color:var(--tx)}
+.drop .ic{font-size:34px;display:block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+#f{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+#fn{font-size:13px;color:var(--g);margin-top:6px;min-height:18px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<main>
+<h1>ResumeLens AI ✨</h1>
+<p class="sub">Upload your resume and get your total score, what to update, and what to remove.</p>
+
+<section class="card" id="inp">
+<label>Target role (optional)</label>
+<input type="text" id="role" placeholder="e.g. Data Analyst Intern">
+<div style="height:12px"></div>
+<label>Upload your resume</label>
+<div class="drop" id="drop"><span class="ic">📄</span><b>Drop your resume here or tap to upload</b><br><small>PDF files only</small><div id="fn"></div><input type="file" id="f" accept=".pdf,application/pdf"></div>
+
+<div class="row">
+<button class="btn" id="go">Analyze Resume ⚡</button>
+<button class="btn ghost" id="clr">Clear</button>
+</div>
+<div class="err" id="err"></div>
+</section>
+
+<section class="card" id="load"><div class="doc"><i class="av"></i><i class="ln w1"></i><i class="ln w2"></i><i class="ln w3"></i><i class="ln w1"></i><i class="ln w2"></i><i class="ln w3"></i><i class="ln w2"></i><div class="beam"></div></div><b id="lm">Reading your resume…</b><div class="pbar"><i id="pf"></i></div></section>
+
+<section id="res">
+<div class="card top">
+<div class="ring">
+<svg width="170" height="170" viewBox="0 0 170 170"><defs><linearGradient id="gr" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+<circle cx="85" cy="85" r="74" fill="none" stroke="rgba(127,127,160,.2)" stroke-width="12"/>
+<circle id="arc" cx="85" cy="85" r="74" fill="none" stroke="url(#gr)" stroke-width="12" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1)"/></svg>
+<div class="n"><div><span id="num">0</span><small>out of 100</small></div></div>
+</div>
+<div class="grow"><span class="pill" id="grade"></span><p id="sum" style="margin:0 0 8px;line-height:1.5"></p><div id="cats"></div></div>
+</div>
+<div class="grid">
+<div class="card"><h3>✅ Strengths</h3><div id="str"></div></div>
+<div class="card"><h3>🔧 Update</h3><div id="upd"></div></div>
+<div class="card"><h3>🗑️ Remove</h3><div id="rem"></div></div>
+<div class="card"><h3>➕ Add</h3><div id="add"></div></div>
+</div>
+<div class="row"><button class="btn ghost" id="again">← Analyze another resume</button></div>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let RT="";
+function isResume(t){
+ const low=t.toLowerCase(),words=t.split(/\s+/).filter(Boolean).length;
+ if(words<80||words>2500)return false;
+ const sec=[/summary|objective|profile/,/education|bachelor|master|b\.?\s?sc|m\.?\s?sc|b\.?\s?tech|diploma|university|college/,/skills/,/projects?/,/experience|internship/,/certif|courses?/,/achievements?|awards?/];
+ const found=sec.filter(r=>r.test(low)).length;
+ const contact=(/\S+@\S+\.\S+/.test(t)?1:0)+(/\b\d{5}[\s-]?\d{5}\b|\b\d{3}[\s.-]\d{3}[\s.-]\d{4}\b/.test(t)?1:0)+(/linkedin|github|portfolio/.test(low)?1:0);
+ const core=/education|skills|experience|internship|projects?/.test(low);
+ return core&&found>=3&&(found+contact)>=5&&contact>=1;
+}
+async function readFile(f){
+ const n=f.name.toLowerCase();
+ if(!(n.endsWith(".pdf")&&(f.type===""||f.type==="application/pdf"))){RT="";$("f").value="";$("fn").style.color="var(--r)";$("fn").textContent="Only PDF files are allowed. Please upload your resume as a PDF.";return}$("fn").style.color="var(--mu)";$("fn").textContent="Reading "+f.name+"…";
+ try{let t="";RT="";
+  if(n.endsWith(".pdf")){if(typeof pdfjsLib==="undefined")throw new Error("PDF reader failed to load");const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
+   for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();t+=c.items.map(x=>x.str).join(" ")+"\n"}}
+  t=t.trim();if(t.length<30)throw new Error("empty");
+  if(!isResume(t)){RT="";$("f").value="";$("fn").style.color="var(--r)";$("fn").textContent="This PDF does not look like a resume. Only resume PDFs are allowed.";return}
+  RT=t;$("fn").style.color="var(--g)";$("fn").textContent="✓ "+f.name+" added";
+ }catch(e){$("fn").style.color="var(--r)";$("fn").textContent="Could not read this file ("+(e&&e.message||"error")+"). Scanned or image-only PDFs are not supported."}
+}
+$("f").onchange=e=>{if(e.target.files[0])readFile(e.target.files[0])};
+try{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"}catch(e){}
+["dragenter","dragover"].forEach(v=>$("drop").addEventListener(v,e=>{e.preventDefault();$("drop").classList.add("on")}));
+["dragleave","drop"].forEach(v=>$("drop").addEventListener(v,e=>{e.preventDefault();$("drop").classList.remove("on")}));
+$("drop").addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)readFile(f)});
+$("clr").onclick=()=>{RT="";$("role").value="";$("fn").textContent="";$("f").value=""};
+$("again").onclick=()=>{
+ RT="";$("f").value="";$("fn").textContent="";$("role").value="";$("err").style.display="none";
+ $("res").style.display="none";$("load").style.display="none";
+ $("arc").style.transition="none";$("arc").style.strokeDashoffset=465;$("num").textContent="0";
+ document.querySelectorAll(".bar i").forEach(b=>b.style.width="0");
+ void $("arc").getBoundingClientRect();$("arc").style.transition="stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1)";
+ $("inp").style.display="block";$("inp").style.animation="none";void $("inp").offsetWidth;$("inp").style.animation="";
+ scrollTo({top:0,behavior:"smooth"})};
+function err(m){const e=$("err");e.textContent=m;e.style.display="block"}
+function list(id,arr,cls,fmt){const el=$(id);el.innerHTML="";(arr||[]).forEach((x,i)=>{const d=document.createElement("div");d.className="it "+cls;d.style.animationDelay=(0.15*i+0.4)+"s";d.innerHTML=fmt(x);el.appendChild(d)});if(!(arr||[]).length)el.innerHTML='<div class="it c" style="opacity:1;transform:none">Nothing here 🎉</div>'}
+function count(el,to){let t0=null;const step=t=>{t0=t0||t;const p=Math.min((t-t0)/1500,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+const LM=["Reading your resume…","Checking sections…","Matching keywords…","Measuring impact…","Calculating your score…"];
+function startLoad(ms){let i=0;$("lm").textContent=LM[0];const f=$("pf");f.style.transition="none";f.style.width="0";void f.offsetWidth;f.style.transition="width "+ms+"ms cubic-bezier(.2,.6,.2,1)";f.style.width="94%";clearInterval(window._lt);window._lt=setInterval(()=>{i=Math.min(i+1,LM.length-1);$("lm").textContent=LM[i]},Math.round(ms/LM.length))}
+function show(d){
+ clearInterval(window._lt);
+ $("load").style.display="none";$("res").style.display="block";
+ const tot=Math.max(0,Math.min(100,Math.round(d.total||0)));
+ $("grade").textContent="Grade "+esc(d.grade||"")+" • "+tot+"/100";
+ $("sum").textContent=d.summary||"";
+ $("cats").innerHTML=(d.categories||[]).map(c=>`<div class="cat"><div class="h"><span>${esc(c.name)}</span><b>${esc(c.score)}/${esc(c.max)}</b></div><div class="bar"><i data-w="${Math.round(100*c.score/c.max)}"></i></div></div>`).join("");
+ list("str",d.strengths,"g",x=>esc(x));
+ list("upd",d.update,"y",x=>`<b>${esc(x.section)}</b>${esc(x.issue)}<br>→ ${esc(x.fix)}`);
+ list("rem",d.remove,"r",x=>`<b>${esc(x.item)}</b>${esc(x.reason)}`);
+ list("add",d.add,"c",x=>esc(x));
+ requestAnimationFrame(()=>{
+  $("arc").style.strokeDashoffset=465*(1-tot/100);count($("num"),tot);
+  document.querySelectorAll(".bar i").forEach(b=>b.style.width=b.dataset.w+"%")});
+ $("res").scrollIntoView({behavior:"smooth"});
+}
+function localAnalyze(t,role){
+ const low=t.toLowerCase(),words=t.split(/\s+/).filter(Boolean).length,r=(role||"").toLowerCase();
+ const cnt=re=>(t.match(re)||[]).length,cl=(v,a,b)=>Math.max(a,Math.min(b,Math.round(v)));
+ const kw=/web|front|back|full|develop|software|react/.test(r)?["html","css","javascript","react","node","git","api","python","java","sql","typescript","mongodb","github","responsive"]:
+  /market|seo|content|social/.test(r)?["seo","campaign","analytics","social media","content","email marketing","google ads","canva","crm","copywriting"]:
+  ["sql","python","excel","power bi","tableau","statistics","dashboard","data visualization","pandas","etl","data cleaning","reporting","kpi","numpy","machine learning"];
+ const hit=kw.filter(k=>low.includes(k)),miss=kw.filter(k=>!low.includes(k));
+ const verbs=["built","developed","designed","created","analyzed","analysed","led","implemented","improved","reduced","increased","automated","optimized","delivered","managed","launched","visualized","presented","cleaned"];
+ const vHit=verbs.filter(v=>low.includes(v)).length;
+ const nums=cnt(/\d+(\.\d+)?\s?%|\d[\d,.]*\s?[kKmM]?\+?\s?(records|rows|users|customers|projects|dashboards|datasets|students)|₹|\$\s?\d/gi);
+ const secs={Summary:/summary|objective|profile/,Education:/education|bachelor|b\.?\s?sc|university|college/,Skills:/skills/,Projects:/projects?/,Experience:/experience|internship/,Certifications:/certif|courses?/};
+ const found=Object.keys(secs).filter(k=>secs[k].test(low)),missing=Object.keys(secs).filter(k=>!secs[k].test(low));
+ const email=/\S+@\S+\.\S+/.test(t),phone=/\b\d{5}[\s-]?\d{5}\b|\b\d{3}[\s.-]\d{3}[\s.-]\d{4}\b/.test(t),links=/linkedin|github|portfolio/.test(low);
+ const weak=["responsible for","hardworking","hard working","team player","eager to","passionate","good communication","quick learner","self-motivated","detail-oriented"].filter(w=>low.includes(w));
+ const personal=["date of birth","dob","marital status","father's name","nationality","gender","hobbies","references available","declaration"].filter(w=>low.includes(w));
+ const avgSent=words/(cnt(/[.!?]\s/g)+1);
+ const c=[
+  ["Content & Impact",cl(5+Math.min(nums,6)*1.5+Math.min(vHit,8)*0.7,0,20)],
+  ["Skills Relevance",cl(4+16*hit.length/Math.min(kw.length,10),0,20)],
+  ["Structure & Formatting",cl(found.length/6*12+(email?2:0)+(phone?2:0)+(links?2:0)+(words>=250&&words<=900?2:0),0,20)],
+  ["Projects & Experience",cl((secs.Projects.test(low)?6:0)+(secs.Experience.test(low)?6:0)+Math.min(vHit,4)+(cnt(/20\d\d/g)>=2?4:0),0,20)],
+  ["Language & Clarity",cl(20-weak.length*2-(cnt(/\bI\b/g)>3?3:0)-(avgSent>28?3:0),6,20)]
+ ];
+ const total=c.reduce((a,x)=>a+x[1],0);
+ const upd=[],rem=[],add=[],str=[];
+ if(nums<3)upd.push({section:"Content & Impact",issue:"Few measurable results found.",fix:'Add numbers to your bullets, e.g. "Built a Power BI dashboard analysing 50K+ records".'});
+ if(miss.length>kw.length/2)upd.push({section:"Skills",issue:"Missing role keywords: "+miss.slice(0,5).join(", ")+".",fix:"Add the ones you really know to your Skills section and project bullets."});
+ if(weak.length)upd.push({section:"Language",issue:"Generic phrases found: "+weak.slice(0,3).join(", ")+".",fix:"Replace them with action verbs plus a result."});
+ if(vHit<4)upd.push({section:"Experience & Projects",issue:"Few action verbs used.",fix:"Start each bullet with verbs like Built, Analysed, Automated, Improved."});
+ if(words>900)upd.push({section:"Length",issue:"Resume is very long.",fix:"Trim to one page (about 400-600 words) for fresher roles."});
+ if(words<250)upd.push({section:"Length",issue:"Resume looks too short.",fix:"Add projects, tools used and outcomes."});
+ if(!email||!phone)upd.push({section:"Contact",issue:"Email or phone number not detected.",fix:"Put email and phone at the top of the resume."});
+ if(!upd.length)upd.push({section:"Formatting",issue:"No major issues detected.",fix:"Keep to one page with consistent fonts and spacing."});
+ weak.forEach(w=>rem.push({item:'"'+w+'"',reason:"Generic phrase that does not show real results."}));
+ personal.forEach(w=>rem.push({item:w,reason:"Not needed in a modern resume and takes up space."}));
+ missing.forEach(m=>add.push("Add a "+m+" section."));
+ if(!links)add.push("Add GitHub, LinkedIn or portfolio links.");
+ if(miss.length)add.push("Relevant keywords to consider: "+miss.slice(0,4).join(", ")+".");
+ if(nums<3)add.push("Add 3+ measurable results (%, counts, time saved).");
+ if(hit.length>=3)str.push("Relevant keywords found: "+hit.slice(0,5).join(", ")+".");
+ if(nums>=3)str.push("Includes measurable results.");
+ if(found.length>=5)str.push("Well-organised sections.");
+ if(links)str.push("Includes professional links.");
+ if(email&&phone)str.push("Contact details are clear.");
+ if(!str.length)str.push("Resume text was readable and detected correctly.");
+ return {total,grade:total>=90?"A+":total>=80?"A":total>=70?"B":total>=60?"C":"D",
+  summary:"Your resume scored "+total+"/100. Biggest room for improvement: "+c.slice().sort((x,y)=>x[1]-y[1])[0][0]+". Check the Update, Remove and Add cards below.",
+  categories:c.map(x=>({name:x[0],score:x[1],max:20})),strengths:str,update:upd.slice(0,5),remove:rem.slice(0,5),add:add.slice(0,5)};
+}
+$("go").onclick=async()=>{
+ $("err").style.display="none";
+ const text=RT.trim();
+ if(text.length<80){return err("Please upload your resume first.")}
+ const prompt=`You are a strict but friendly resume reviewer. Target role: ${$("role").value||"general"}.
+Score the resume out of 100 using exactly these 5 categories, each max 20: "Content & Impact", "Skills Relevance", "Structure & Formatting", "Projects & Experience", "Language & Clarity".
+Return ONLY JSON: {"total":number (sum of category scores),"grade":"A+/A/B/C/D","summary":"2 sentences","categories":[{"name":string,"score":number,"max":20}],"strengths":[string x3-4],"update":[{"section":string,"issue":string,"fix":string} x3-5],"remove":[{"item":string,"reason":string} x2-4],"add":[string x3-4]}.
+Be specific, quote the candidate's own items. Resume:\n"""${text.slice(0,12000)}"""`;
+ let sample=null;
+ if(typeof claude!=="undefined"){try{sample=await claude.use("sample")}catch(e){}}
+ $("inp").style.display="none";$("load").style.display="block";startLoad(sample?9000:2800);
+ if(!sample){await new Promise(r=>setTimeout(r,2900));return show(localAnalyze(text,$("role").value))}
+ try{show(await sample.json(prompt,{cache:false}))}
+ catch(e){show(localAnalyze(text,$("role").value))}
+};
+</script></body></html>
